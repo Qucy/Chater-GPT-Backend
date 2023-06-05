@@ -3,14 +3,11 @@ from langchain.llms import AzureOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
-os.environ["OPENAI_API_TYPE"] = "azure"
-os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
-os.environ["OPENAI_API_BASE"] = ""
-os.environ["SERPAPI_API_KEY"] = ""
+deployment_name = 'text-davinci-003'
+model_nane = 'text-davinci-003'
 
-# Create an instance of Azure OpenAI
-llm = AzureOpenAI(deployment_name="text-davinci-003", model_name="text-davinci-003")
-
+# Create an instance of Azure OpenAI text-davinci-003
+llm = AzureOpenAI(deployment_name=deployment_name, model_name=model_nane)
 
 def chainLLMWithPrompt():
     # create a prompt template
@@ -63,6 +60,8 @@ if __name__ == '__main__':
 
     # chainLLMWithPrompt()
 
-    LLMAgentWithSearchAndCalcTools()
+    # LLMAgentWithSearchAndCalcTools()
 
     # LLMAgentWithPythonREPLTool()
+
+    llm('what is machine learning?')

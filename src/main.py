@@ -9,7 +9,9 @@ from model.APIRequestModel import Translation, GrammerCorrection, TLDRSummarizat
 from service.chatCompletionService import AzureNormalChatCompletion, AzureStreamChatCompletion, LangChainStreamCompletionService
 from service.promptService import TranslationPromptService, GrammerCorrectionPromptService, TLDRSummarizationPromptService, RestaruantReviewPromptService, FriendChatPromptService
 from service.agentService import SQLAgentService, NewsAgentService, SearchAgentService
+from service.azureSpeechService import AzureSpeechService
 from dao.promptTemplateDao import PromptTemplateDao
+from util.logger import GPTLogger
 
 
 app = FastAPI()
@@ -17,18 +19,22 @@ app = FastAPI()
 # init config
 config = ProductionConfig if os.getenv("ENV") == "production" else DevelopmentConfig
 
+# init logger
+logger = GPTLogger(config.logger_name, config.logger_level, config.logger_path)
+
 # init service
-normal_completion = AzureNormalChatCompletion(config.api_deployment_name)
-stream_completion = AzureStreamChatCompletion(config.api_deployment_name)
-langChain_completion = LangChainStreamCompletionService(config.langChain_deployment_name, config.langChain_model_name)
+normal_completion = AzureNormalChatCompletion(config.llm_deployment_name)
+stream_completion = AzureStreamChatCompletion(config.llm_deployment_name)
+langChain_completion = LangChainStreamCompletionService(config.llm_deployment_name, config.llm_deployment_name)
 translationPromptService = TranslationPromptService()
 grammerCorrectionPromptService = GrammerCorrectionPromptService()
 tldrSummarizationPromptService = TLDRSummarizationPromptService()
 restaurantReviewPromptService = RestaruantReviewPromptService()
 friendChatPromptService = FriendChatPromptService()
-sqlAgentService = SQLAgentService(config.langChain_deployment_name, config.langChain_model_name, config.SQL_AGENT_DB)
-newsAgentService = NewsAgentService(config.langChain_deployment_name, config.langChain_model_name)
-searchAgentService = SearchAgentService(config.langChain_deployment_name, config.langChain_model_name)
+sqlAgentService = SQLAgentService(config.llm_deployment_name, config.llm_model_name, config.SQL_AGENT_DB)
+newsAgentService = NewsAgentService(config.llm_deployment_name, config.llm_model_name)
+searchAgentService = SearchAgentService(config.llm_deployment_name, config.llm_model_name)
+azureSpeechService = AzureSpeechService(config, logger)
 
 
 origins = [
@@ -169,7 +175,7 @@ async def generate_text_in_stream(friendchat: FriendChatModel):
     # call open library to get completion
     chats = stream_completion.completion(messages=messages)
     for chat in chats:
-        # print system time
+        # return chat in stream manner
         yield chat
         await asyncio.sleep(0.01)
 
