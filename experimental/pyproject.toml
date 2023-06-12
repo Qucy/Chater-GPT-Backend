@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "chatbot"
+version = "0.1.0"
+description = ""
+authors = ["steven <stevenvuong96@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.7"
+jupyter = "^1.0.0"
+jupyterlab = "^4.0.1"
+numpy = "^1.24.3"
+pandas = "^2.0.2"
+matplotlib = "^3.7.1"
+seaborn = "^0.12.2"
+black = "^23.3.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+interrogate = "^1.5.0"
+refurb = "^1.16.0"
+python-dotenv = "^1.0.0"
+openai = "^0.27.8"
+tqdm = "^4.65.0"
+langchain = "^0.0.194"
+psycopg2-binary = "^2.9.6"
+psycopg2 = "^2.9.6"
+playwright = "^1.34.0"
+lxml = "^4.9.2"
+wikipedia = "^1.4.0"
+unstructured = "^0.7.3"
+pdf2image = "^1.16.3"
+tiktoken = "^0.4.0"
+faiss-cpu = "^1.7.4"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+include = '\.pyi?$'
+exclude = '''
+/(
+	\.git
+| \.hg
+| \.mypy_cache
+| \.tox
+| \.venv
+| _build
+| buck-out
+| build   
+)/ 
+'''
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-property-decorators = true
+ignore-module = true
+ignore-nested-functions = true
+ignore-nested-classes = true
+ignore-setters = false
+fail-under = 95
+exclude = ["setup.py", "docs", "build"]
+ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+verbose = 0
+quiet = false
+whitelist-regex = []
+color = true
+generate-badge = "."
+badge-format = "svg"
